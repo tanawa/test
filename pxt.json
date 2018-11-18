@@ -1,0 +1,16 @@
+
+{
+    "name": "test",
+    "version": "0.0.1",
+    "description": "ทดสอบ",
+    "license": "MIT",
+    "dependencies": {
+        "core": "*"
+    },
+    "files": [
+        "README.md",
+        "testin.ts",
+        "_locales/zh/tools-strings.json"
+    ],
+    "public": true
+}
