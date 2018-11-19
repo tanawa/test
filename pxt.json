@@ -1,16 +1,14 @@
-
 {
-    "name": "test",
-    "version": "0.0.1",
-    "description": "ทดสอบ",
-    "license": "MIT",
+    "name": "Untitled",
     "dependencies": {
-        "core": "*"
+        "core": "*",
+        "radio": "*"
     },
+    "description": "",
     "files": [
+        "main.blocks",
+        "main.ts",
         "README.md",
-        "testin.ts",
-        "_locales/zh/tools-strings.json"
-    ],
-    "public": true
+        "custom.ts"
+    ]
 }
