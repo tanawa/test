@@ -37,9 +37,10 @@ $("#left").on("mousedown",function(){
   	
   });
 $("#left").on("mouseleave",function(){
-	var ref=firebase.database().ref("main");
+	var ref=firebase.database().ref("main/con");
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null || snapshot.val()!="n"){
+			var ref=firebase.database().ref("main");
 			ref.child("con").set("n");
 		}
 	},function(e){
@@ -60,9 +61,10 @@ $("#up").on("mousedown",function(){
   	
   });
 $("#up").on("mouseleave",function(){
-	var ref=firebase.database().ref("main");
+	var ref=firebase.database().ref("main/con");
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null || snapshot.val()!="n"){
+			var ref=firebase.database().ref("main");
 			ref.child("con").set("n");
 		}
 	},function(e){
@@ -83,9 +85,10 @@ $("#down").on("mousedown",function(){
   	
   });
 $("#down").on("mouseleave",function(){
-	var ref=firebase.database().ref("main");
+	var ref=firebase.database().ref("main/con");
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null || snapshot.val()!="n"){
+			var ref=firebase.database().ref("main");
 			ref.child("con").set("n");
 		}
 	},function(e){
@@ -106,9 +109,10 @@ $("#rigth").on("mousedown",function(){
   	
   });
 $("#rigth").on("mouseleave",function(){
-	var ref=firebase.database().ref("main");
+	var ref=firebase.database().ref("main/con");
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null || snapshot.val()!="n"){
+			var ref=firebase.database().ref("main");
 			ref.child("con").set("n");
 		}
 	},function(e){
