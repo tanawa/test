@@ -36,13 +36,34 @@ $("#left").on("mousedown",function(){
 	});
   	
   });
+$("#left").on("mouseleave",function(){
+	var ref=firebase.database().ref("main/con");
+	ref.once("value",function(snapshot){
+		if(snapshot.val()==null || snapshot.val()!="n"){
+			ref.child("con").set("n");
+		}
+	},function(e){
 
+	});
+  	
+  });
 $("#up").on("mousedown",function(){
 	var ref=firebase.database().ref("main/con");
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null || snapshot.val()!="w"){
 			var ref=firebase.database().ref("main");
 			ref.child("con").set("w");
+		}
+	},function(e){
+
+	});
+  	
+  });
+$("#up").on("mouseleave",function(){
+	var ref=firebase.database().ref("main/con");
+	ref.once("value",function(snapshot){
+		if(snapshot.val()==null || snapshot.val()!="n"){
+			ref.child("con").set("n");
 		}
 	},function(e){
 
@@ -61,12 +82,34 @@ $("#down").on("mousedown",function(){
 	});
   	
   });
-$("#left").on("mousedown",function(){
+$("#down").on("mouseleave",function(){
+	var ref=firebase.database().ref("main/con");
+	ref.once("value",function(snapshot){
+		if(snapshot.val()==null || snapshot.val()!="n"){
+			ref.child("con").set("n");
+		}
+	},function(e){
+
+	});
+  	
+  });
+$("#rigth").on("mousedown",function(){
 	var ref=firebase.database().ref("main/con");
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null || snapshot.val()!="d"){
 			var ref=firebase.database().ref("main");
 			ref.child("con").set("d");
+		}
+	},function(e){
+
+	});
+  	
+  });
+$("#rigth").on("mouseleave",function(){
+	var ref=firebase.database().ref("main/con");
+	ref.once("value",function(snapshot){
+		if(snapshot.val()==null || snapshot.val()!="n"){
+			ref.child("con").set("n");
 		}
 	},function(e){
 
