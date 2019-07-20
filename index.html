@@ -24,7 +24,7 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   var ref=firebase.database().ref("main");
-$("#left").on("ontouchstart",function(){
+$("#left").click(function(){
 	var ref=firebase.database().ref("main/con");
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null || snapshot.val()!="a"){
@@ -76,7 +76,7 @@ $("#rigth").click(function(){
   
   $("#exit").click(function(){
 			var ref=firebase.database().ref("main");
-			ref.child("con").set("n");
+			ref.child("con").set("none");
   });
   });
 </script>
