@@ -37,7 +37,7 @@ $("#left").on("mousedown",function(){
   	
   });
 $("#left").on("mouseleave",function(){
-	var ref=firebase.database().ref("main/con");
+	var ref=firebase.database().ref("main");
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null || snapshot.val()!="n"){
 			ref.child("con").set("n");
@@ -60,7 +60,7 @@ $("#up").on("mousedown",function(){
   	
   });
 $("#up").on("mouseleave",function(){
-	var ref=firebase.database().ref("main/con");
+	var ref=firebase.database().ref("main");
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null || snapshot.val()!="n"){
 			ref.child("con").set("n");
@@ -83,7 +83,7 @@ $("#down").on("mousedown",function(){
   	
   });
 $("#down").on("mouseleave",function(){
-	var ref=firebase.database().ref("main/con");
+	var ref=firebase.database().ref("main");
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null || snapshot.val()!="n"){
 			ref.child("con").set("n");
@@ -106,7 +106,7 @@ $("#rigth").on("mousedown",function(){
   	
   });
 $("#rigth").on("mouseleave",function(){
-	var ref=firebase.database().ref("main/con");
+	var ref=firebase.database().ref("main");
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null || snapshot.val()!="n"){
 			ref.child("con").set("n");
