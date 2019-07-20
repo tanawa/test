@@ -2,7 +2,6 @@
 <html>
 <head>
 	<title></title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
 		<script src="https://www.gstatic.com/firebasejs/3.1.0/firebase.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script></script>
 
@@ -134,7 +133,7 @@ $("#rigth").on("mouseleave",function(){
 		}
 		button{
 			width: 24%;
-			height: 95%;
+			height: 60%;
 			border:1px solid #ddd;
 			border-radius: 90px;
 			outline: none;
@@ -145,6 +144,16 @@ $("#rigth").on("mouseleave",function(){
 		button:active{
 			opacity: 1;
 		}
+		#exit{
+			width: 90%;
+			height: 30%;
+			border:1px solid #ddd;
+			border-radius: 90px;
+			outline: none;
+			float: left;
+			opacity: 0.6;
+			margin-top: 1%;
+		}
 	</style>
 </head>
 <body>
@@ -152,6 +161,7 @@ $("#rigth").on("mouseleave",function(){
 <button id="up">UP</button>
 <button id="down">DOWN</button>
 <button id="rigth">RIGTH</button>
+
 <button id="exit">exit</button>
 </body>
 </html>
