@@ -71,13 +71,13 @@ $("#rigth").click(function(){
 	},function(e){
 
 	});
-  	
-  });
-  
-  $("#exit").click(function(){
+  	$("#exit").click(function(){
 			var ref=firebase.database().ref("main");
 			ref.child("con").set("n");
   });
+  });
+  
+  
 </script>
 	<style type="text/css">
 		html,body{
