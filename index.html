@@ -24,7 +24,7 @@
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   var ref=firebase.database().ref("main");
-$("#left").on("taphold",function(){
+$("#left").on("ontouchstart",function(){
 	var ref=firebase.database().ref("main/con");
 	ref.once("value",function(snapshot){
 		if(snapshot.val()==null || snapshot.val()!="a"){
