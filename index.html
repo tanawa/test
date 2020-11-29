@@ -1,4 +1,584 @@
-<?php
-echo"dsa";
+<!DOCTYPE html>
+<html>
+<head>
+	<title>เกมส์งู</title>
+	<meta charset="utf-8">
+	<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap" rel="stylesheet">
+	<style type="text/css">
+		/*-------------------ตกแต่งหน้าเกม-------------------------*/
+		body{
+			font-family: 'Kanit', sans-serif;
+		}
+		/*-------------------เฟรมหลักของเกม-------------------------*/
+		canvas{
+			/*border:1px solid rgba(225,0,154);*/
+			display: inline-block;
+			box-shadow: 0px 0px 5px #DDD;
+			float: left;
+			margin-left: 100px;
+			margin-top:50px;
+		}
+		/*-------------------ลูกเต๋า-------------------------*/
+		#dice{
+			width: 100px;
+			height: 100px;
+			display: block;
+			background-image: url('./ลูกเต๋า/1.png');
+			background-size:cover;
+			box-shadow:0px 0px 5px #DDD;
+			border-radius: 40px;
+			margin-left: 210px;
+			margin-top: 40px;
+			
+		}
+		#dice:hover{
+			background-image: url('./ลูกเต๋า/animation.gif');
+			background-size:cover;
+		}
+		/*-------------------ปุ่มต่างๆ-------------------------*/
+		button{
+			font-family: 'Kanit', sans-serif;
+			border:1px solid #DDD;
+			padding: 10px 25px;
+			background-color: #DDD;
+			border-radius: 3px;
+		}
+		select{
+			padding:10px 25px;
+			border-radius: 3px;
+			font-family: 'Kanit', sans-serif;
+		}
+		/*-------------------กล่องคุม-------------------------*/
+		.controls{
+			width: 500px;
+			height: 480px;
+			box-shadow: 0px 0px 15px #DDD;
+			float: right;
+			margin-top:50px;
+			margin-right: 100px;
+			padding: 10px 25px;
+			border-radius: 15px;
+		}
+		.controls>img{
+			margin-left: 180px;
+			display: inline;
+			margin-bottom: 20px;
+		}
+		.span_text{
+			width: 100%;
+			text-align: center;
+			font-weight: bold;
+			margin-top:10px;
+			margin-bottom: 10px;
+		}
+		.alert{
+			box-shadow: 0px 0px 5px #000;
+			width: 300px;
+			height: 150px;
+			padding: 10px 25px 10px 25px;
+			background-color: #FFF;
+			position: absolute;
+			margin-top: 200px;
+			margin-left: 200px;
+		}
+		#newGame{
+			display: none;
+		}
+		.hideBtn{
+			float: center;
+			margin-top: 10px;
+			margin-left: 40%;
+		}
+	</style>
+	<!----------ดึงทรัพยากรมาใช้-------------->
+	<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/7.14.2/firebase-database.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@9/dist/sweetalert2.min.css" id="theme-styles">
+	<!------------------------------------>
+	<script>
+		//-----------------เชื่อมต่อฐานข้อมูลfirebase-------------------//
+  		var firebaseConfig = {
+   			apiKey: "AIzaSyBgej8wRzG-5J4vZNDP_nku75OlhAUhetM",
+    		authDomain: "webv-cb0d0.firebaseapp.com",
+    		databaseURL: "https://webv-cb0d0.firebaseio.com",
+    		projectId: "webv-cb0d0",
+    		storageBucket: "webv-cb0d0.appspot.com",
+    		messagingSenderId: "612538720203",
+    		appId: "1:612538720203:web:dba192e10d8b8e65"
+  		};
+  		firebase.initializeApp(firebaseConfig);
+  		var ref=firebase.database().ref("gamesnake");
+  		
+	</script>
+</head>
+<body>
+	<!--หน้าต่างเกม--->
+	<canvas id="canvas" width="500" height="500"></canvas>
+	<!--หน้าต่างเกม--->
 
-?>
+	<!--ส่วนควบคุม--->
+	<div class="controls">
+		<!--ภาพตัวละคร--->
+		<img src="character1.png" width="140" height="140" id="img">
+		<!--ภาพตัวละคร--->
+		<div class="span_text">
+			<select id="selectcharacter" onchange="load_Firebase()">
+				<option value="1">ผู้เล่นที่1</option>
+				<option value="2">ผู้เล่นที่2</option>
+				<option value="3">ผู้เล่นที่3</option>
+			</select>
+			<br>
+			<div class="hideBtn">
+				<button onclick="newGame()" id="newGame">เริ่มใหม่</button>
+			</div>
+			
+		</div>
+		<div class="span_text">
+			<a>
+				ตาของผู้เล่นที่ 
+			</a>
+			<a id="turn">
+				<!--แสดงตาของผู้เล่น--->
+					none
+				<!--แสดงตาของผู้เล่น--->
+			</a>
+		</div>
+		<div class="span_text">
+			<a>
+				ขณะนี้อยู่ที่ช่องที่ 
+			</a>
+			<a id="position">
+				<!--ช่องที่ตัวละครอยู่--->
+					none
+				<!--ช่องที่ตัวละครอยู่--->
+			</a>
+		</div>
+		<div class="span_text">
+			<!--ลูกเต๋า--->
+			<div id="dice"></div>
+			<!--ลูกเต๋า--->
+		</div>
+	</div>
+	<!--ส่วนควบคุม--->
+	<audio id="a0" hidden autoplay loop autobuffer volume="0.1">
+  		<source src="12tails.mp3" type="audio/mpeg">
+	</audio>
+	<audio id="a2" hidden autobuffer volume="1.0">
+  		<source src="m1.mp3" type="audio/mpeg">
+	</audio>
+	<audio id="a1" hidden autoplay volume="1.0">
+  		<source src="m2.mp3" type="audio/mpeg">
+	</audio>
+	<script type="text/javascript">
+		var a1=document.getElementById('a1');
+		var a2=document.getElementById('a2');
+		var a0=document.getElementById('a0');
+		a0.volume=0.1
+		var dice=document.getElementById('dice');
+		var canvas=document.getElementById("canvas");
+		var ctx=canvas.getContext('2d');
+		var img=new Image();
+		var character1=new Image();
+		var character2=new Image();
+		var character3=new Image();
+		var winner=false;
+		//-----------------ค่าเกมส์และตัวละคร--------------------//
+		var aboutGame={
+			"area":[//------------------พื้นที่กระดาน---------------------//
+			[10,450],[85,450],[160,450],[235,450],[310,450],[370,450],[450,450],
+			[460,380],[385,380],[310,380],[230,380],[160,380],[85,380],[10,380],
+			[10,310],[85,310],[160,310],[235,310],[310,310],[385,310],[450,310],
+			[460,240],[385,240],[310,240],[235,240],[160,240],[85,240],[10,240],
+			[10,170],[85,170],[160,170],[235,170],[310,170],[385,170],[450,170],
+			[460,100],[385,100],[310,100],[235,100],[160,100],[85,100],[10,100],
+			[10,30],[85,30],[160,30],[235,30],[310,30],[385,30],[450,30]
+			],
+			//------------------คำถามและช่องที่ต้องตกลงไป---------------------//
+			"lucky":[[10,"1+1=2",true],[14,"2+1=4",false],[48,"2+1=4",false]],
+			"luck":[3],
+			"bad":[12],
+			//------------------ช่องที่มีงู---------------------//
+			"snake":[[27,15],[45,38],[19,8]],
+			//------------------ช่องที่มีบรรได---------------------//
+			"staircase":[[3,13],[5,9],[12,18],[32,40],[37,47]],
+			"turn":1,
+			"dice":1
+		};
+		var aboutCharacter1={
+			"width":40,
+			"height":40,
+			"x":10,
+			"y":450,
+			"dice":1
+		};
+		var aboutCharacter2={
+			"width":40,
+			"height":40,
+			"x":10,
+			"y":450,
+			"dice":1
+		};
+		var aboutCharacter3={
+			"width":40,
+			"height":40,
+			"x":10,
+			"y":450,
+			"dice":1
+		};
+		let keywords=[3,5,1,12,32,37]
+		let j=[]
+		let k=aboutGame["luck"]
+		let q=aboutGame["bad"]
+		console.log(aboutGame["luck"])
+		while(k.length <3){
+			let i=(Math.floor(Math.random()*47)+1)
+			
+			if(!keywords.includes(i)){
+				j.push(i)
+			}
+			aboutGame["luck"]=j
+			k=aboutGame["luck"]
+		}
+		j=[]
+
+		while(q.length <3){
+			let i=(Math.floor(Math.random()*47)+1)
+			
+			if(!keywords.includes(i) && !k.includes(i)){
+				j.push(i)
+			}
+			aboutGame["bad"]=j
+			q=aboutGame["bad"]
+		}
+		var selectChar=document.getElementById("selectcharacter").value;
+		//--------------------------------------------------//
+		//--------------------------------------------------//
+		ref.on("value",function(snapshot){
+			aboutCharacter1["dice"]=snapshot.val()["c1"][0];
+
+  			aboutCharacter1["x"]=aboutGame["area"][aboutCharacter1["dice"]-1][0];
+  			aboutCharacter1["y"]=aboutGame["area"][aboutCharacter1["dice"]-1][1];
+  			aboutCharacter2["dice"]=snapshot.val()["c2"][0];
+  			aboutCharacter2["x"]=aboutGame["area"][aboutCharacter2["dice"]-1][0];
+  			aboutCharacter2["y"]=aboutGame["area"][aboutCharacter2["dice"]-1][1];
+  			aboutCharacter3["dice"]=snapshot.val()["c3"][0];
+  			aboutCharacter3["x"]=aboutGame["area"][aboutCharacter3["dice"]-1][0];
+  			aboutCharacter3["y"]=aboutGame["area"][aboutCharacter3["dice"]-1][1];
+  			aboutGame["turn"]=snapshot.val()["turn"];
+  			document.getElementById("turn").innerHTML=aboutGame["turn"];
+  			let position=0;
+  			if(selectChar==1){
+  				position=aboutCharacter1["dice"];
+  			}else if(selectChar==2){
+  				position=aboutCharacter2["dice"];
+  			}else if(selectChar==3){
+  				position=aboutCharacter3["dice"];
+  			}
+  			if(snapshot.val()["winner"]!=""){
+  				document.getElementById("newGame").style.display="block"
+  				winner=true;
+  				if(selectChar==parseInt(snapshot.val()["winner"])){
+  					swal.fire("แจ้งเตือน","คุณชนะ","success");
+  				}else{
+  					swal.fire("เกมจบลงแล้ว","ผู้เล่น"+snapshot.val()["winner"]+"ชนะ","error");
+  				}
+  			}
+  			document.getElementById("position").innerHTML=position;
+  			loadmap("main.png","character1.png","character2.png","character3.png");
+  		},function(err){
+
+  		});
+  		//--------------------------------------------------//
+		function load_Firebase(){
+			selectChar=document.getElementById("selectcharacter").value;
+			document.getElementById("img").src="character"+selectChar+".png";
+			ref.once("value",function(snapshot){
+				aboutCharacter1["dice"]=snapshot.val()["c1"][0];
+  				aboutCharacter1["x"]=aboutGame["area"][aboutCharacter1["dice"]-1][0];
+  				aboutCharacter1["y"]=aboutGame["area"][aboutCharacter1["dice"]-1][1];
+  				aboutCharacter2["dice"]=snapshot.val()["c2"][0];
+  				aboutCharacter2["x"]=aboutGame["area"][aboutCharacter2["dice"]-1][0];
+  				aboutCharacter2["y"]=aboutGame["area"][aboutCharacter2["dice"]-1][1];
+  				aboutCharacter3["dice"]=snapshot.val()["c3"][0];
+  				aboutCharacter3["x"]=aboutGame["area"][aboutCharacter3["dice"]-1][0];
+  				aboutCharacter3["y"]=aboutGame["area"][aboutCharacter3["dice"]-1][1];
+  				aboutGame["turn"]=snapshot.val()["turn"];
+  				document.getElementById("turn").innerHTML=aboutGame["turn"];
+  				let position=0;
+  				if(selectChar==1){
+  					position=aboutCharacter1["dice"];
+  				}else if(selectChar==2){
+  					position=aboutCharacter2["dice"];
+  				}else if(selectChar==3){
+  					position=aboutCharacter3["dice"];
+  				}
+  				if(snapshot.val()["winner"]!=""){
+  					winner=true;
+  					if(selectChar==parseInt(snapshot.val()["winner"])){
+  						swal.fire("แจ้งเตือน","คุณชนะ","success");
+  					}else{
+  						swal.fire("เกมจบลงแล้ว","ผู้เล่น"+snapshot.val()["winner"]+"ชนะ","error");
+  					}
+  				}
+  				document.getElementById("position").innerHTML=position;
+  				loadmap("main.png","character1.png","character2.png","character3.png");
+  			},function(err){
+
+  			});
+		}
+		//--------------------------------------------------//
+		
+		//--------------------------------------------------//
+		function loadmap(bg,c1,c2,c3){
+			img.onload=function(){
+			ctx.drawImage(img,0,0,500,500);
+			ctx.drawImage(character1,
+				aboutCharacter1.x+20,
+				aboutCharacter1.y+5,
+				aboutCharacter1.width,
+				aboutCharacter1.height
+				);
+			ctx.drawImage(character2,
+				aboutCharacter2.x-10,
+				aboutCharacter2.y+5,
+				aboutCharacter2.width,
+				aboutCharacter2.height
+				);
+			ctx.drawImage(character3,
+				aboutCharacter3.x-10,
+				aboutCharacter3.y-25,
+				aboutCharacter3.width,
+				aboutCharacter3.height
+				);
+			};
+			img.src=bg;
+			character1.src=c1;
+			character2.src=c2;
+			character3.src=c3;
+		}
+		//------------------------การเคลื่อนที่--------------------------//
+		function move(){
+			selectChar=document.getElementById("selectcharacter").value;
+			console.log("click")
+			if(aboutGame.turn==selectChar && !isNaN(aboutGame.dice)){
+				if((aboutCharacter1["dice"]+aboutGame.dice)>49 && selectChar==1){
+					console.log("c1 >49");
+					aboutCharacter1["dice"]-=(aboutCharacter1["dice"]+aboutGame.dice)-49;
+				}else if((aboutCharacter2["dice"]+aboutGame.dice)>49 && selectChar==2){
+					console.log("c2 >49");
+					aboutCharacter2["dice"]-=(aboutCharacter2["dice"]+aboutGame.dice)-49;
+				}else if((aboutCharacter3["dice"]+aboutGame.dice)>49 && selectChar==2){
+					console.log("c3 >49");
+					aboutCharacter3["dice"]-=(aboutCharacter3["dice"]+aboutGame.dice)-49;
+				}else if((aboutCharacter1["dice"]+aboutGame.dice)<=49 && selectChar==1){
+					aboutCharacter1["dice"]+=aboutGame.dice;
+					document.getElementById("position").innerHTML=aboutCharacter1["dice"];
+				}else if((aboutCharacter2["dice"]+aboutGame.dice)<=49 && selectChar==2){
+					aboutCharacter2["dice"]+=aboutGame.dice;
+					document.getElementById("position").innerHTML=aboutCharacter2["dice"];
+				}else if((aboutCharacter3["dice"]+aboutGame.dice)<=49 && selectChar==3){
+					aboutCharacter3["dice"]+=aboutGame.dice;
+					document.getElementById("position").innerHTML=aboutCharacter3["dice"];
+				}
+				//
+				let n,y;
+				for(n=0;n<aboutGame["snake"].length;n++){
+					if(aboutGame["snake"][n][0]==aboutCharacter1["dice"] || aboutGame["snake"][n][0]==aboutCharacter2["dice"] || aboutGame["snake"][n][0]==aboutCharacter3["dice"]){
+						y=n;
+						console.log(aboutGame["snake"][n][0])
+						if(selectChar==1){
+								aboutCharacter1["dice"]=aboutGame["snake"][y][1];
+								aboutCharacter1["x"]=aboutGame["area"][aboutCharacter1["dice"]-1][0];
+								aboutCharacter1["y"]=aboutGame["area"][aboutCharacter1["dice"]-1][1];
+								text=aboutCharacter1["dice"];
+							}else if(selectChar==2){
+								aboutCharacter2["dice"]=aboutGame["snake"][y][1];
+								aboutCharacter2["x"]=aboutGame["area"][aboutCharacter2["dice"]-1][0];
+								aboutCharacter2["y"]=aboutGame["area"][aboutCharacter2["dice"]-1][1];
+								text=aboutCharacter2["dice"];
+							}else if(selectChar==3){
+								aboutCharacter3["dice"]=aboutGame["snake"][y][1];
+								aboutCharacter3["x"]=aboutGame["area"][aboutCharacter3["dice"]-1][0];
+								aboutCharacter3["y"]=aboutGame["area"][aboutCharacter3["dice"]-1][1];
+								text=aboutCharacter3["dice"];
+							}
+						swal.fire("งู","คุณเจองูทำให้ตกลงไปหาง","warning");
+						a2.play()
+						setTimeout(function(){
+							let text=0;
+							ref.child("c"+selectChar).set([text]);
+							loadmap("main.png","character1.png","character2.png","character3.png");
+							return 0;
+						},1000);
+					}
+				}
+				n=0,y=0;
+				for(n=0;n<aboutGame["staircase"].length;n++){
+					if(aboutGame["staircase"][n][0]==aboutCharacter1["dice"] || aboutGame["staircase"][n][0]==aboutCharacter2["dice"] || aboutGame["staircase"][n][0]==aboutCharacter3["dice"]){
+						y=n;
+						swal.fire("บรรได","คุณเจอบรรได","info");
+						a1.play()
+						setTimeout(function(){
+							let text=0;
+							if(selectChar==1){
+								aboutCharacter1["dice"]=aboutGame["staircase"][y][1];
+								aboutCharacter1["x"]=aboutGame["area"][aboutCharacter1["dice"]-1][0];
+								aboutCharacter1["y"]=aboutGame["area"][aboutCharacter1["dice"]-1][1];
+								text=aboutCharacter1["dice"];
+							}else if(selectChar==2){
+								aboutCharacter2["dice"]=aboutGame["staircase"][y][1];
+								aboutCharacter2["x"]=aboutGame["area"][aboutCharacter2["dice"]-1][0];
+								aboutCharacter2["y"]=aboutGame["area"][aboutCharacter2["dice"]-1][1];
+								text=aboutCharacter2["dice"];
+							}else if(selectChar==3){
+								aboutCharacter3["dice"]=aboutGame["staircase"][y][1];
+								aboutCharacter3["x"]=aboutGame["area"][aboutCharacter3["dice"]-1][0];
+								aboutCharacter3["y"]=aboutGame["area"][aboutCharacter3["dice"]-1][1];
+								text=aboutCharacter3["dice"];
+							}
+							
+							ref.child("c"+selectChar).set([text]);
+							loadmap("main.png","character1.png","character2.png","character3.png");
+							return 0;
+						},1000);
+					}
+				}
+
+				for(n=0;n<aboutGame["luck"].length;n++){
+					if(aboutGame["luck"][n]==aboutCharacter1["dice"] || aboutGame["luck"][n]==aboutCharacter2["dice"] || aboutGame["lucky"][n]==aboutCharacter3["dice"]){
+						swal.fire("โชคดี","คุณได้เดินหน้า1ช่อง","success");
+						a1.play()
+						setTimeout(function(){
+						let text=0;
+						if(selectChar==1){
+								aboutCharacter1["dice"]=aboutCharacter1["dice"]+1
+								aboutCharacter1["x"]=aboutGame["area"][aboutCharacter1["dice"]-1][0];
+								aboutCharacter1["y"]=aboutGame["area"][aboutCharacter1["dice"]-1][1];
+								text=aboutCharacter1["dice"];
+						}else if(selectChar==2){
+								aboutCharacter2["dice"]=aboutCharacter2["dice"]+1
+								aboutCharacter2["x"]=aboutGame["area"][aboutCharacter2["dice"]-1][0];
+								aboutCharacter2["y"]=aboutGame["area"][aboutCharacter2["dice"]-1][1];
+								text=aboutCharacter2["dice"];
+						}else if(selectChar==3){
+								aboutCharacter3["dice"]=aboutCharacter3["dice"]+1
+								aboutCharacter3["x"]=aboutGame["area"][aboutCharacter3["dice"]-1][0];
+								aboutCharacter3["y"]=aboutGame["area"][aboutCharacter3["dice"]-1][1];
+								text=aboutCharacter3["dice"];
+						}
+						ref.child("c"+selectChar).set([text]);
+						
+						loadmap("main.png","character1.png","character2.png","character3.png");
+						},1000);
+					}
+				}
+				for(n=0;n<aboutGame["bad"].length;n++){
+					if(aboutGame["bad"][n]==aboutCharacter1["dice"] || aboutGame["bad"][n]==aboutCharacter2["dice"] || aboutGame["bad"][n]==aboutCharacter3["dice"]){
+						swal.fire("โชคร้าย","คุณได้เดินถอยหลัง1ช่อง","warning");
+						a2.play()
+						setTimeout(function(){
+						let text=0;
+						if(selectChar==1){
+								aboutCharacter1["dice"]=aboutCharacter1["dice"]-1
+								aboutCharacter1["x"]=aboutGame["area"][aboutCharacter1["dice"]-1][0];
+								aboutCharacter1["y"]=aboutGame["area"][aboutCharacter1["dice"]-1][1];
+								text=aboutCharacter1["dice"];
+						}else if(selectChar==2){
+								aboutCharacter2["dice"]=aboutCharacter2["dice"]-1
+								aboutCharacter2["x"]=aboutGame["area"][aboutCharacter2["dice"]-1][0];
+								aboutCharacter2["y"]=aboutGame["area"][aboutCharacter2["dice"]-1][1];
+								text=aboutCharacter2["dice"];
+						}else if(selectChar==3){
+								aboutCharacter3["dice"]=aboutCharacter3["dice"]-1
+								aboutCharacter3["x"]=aboutGame["area"][aboutCharacter3["dice"]-1][0];
+								aboutCharacter3["y"]=aboutGame["area"][aboutCharacter3["dice"]-1][1];
+								text=aboutCharacter3["dice"];
+						}
+						
+						ref.child("c"+selectChar).set([text]);
+						loadmap("main.png","character1.png","character2.png","character3.png");
+						},1000);
+					}
+				}
+				let text=0;
+				selectChar=document.getElementById("selectcharacter").value;
+				if(selectChar==1){
+					aboutCharacter1["x"]=aboutGame["area"][aboutCharacter1["dice"]-1][0];
+					aboutCharacter1["y"]=aboutGame["area"][aboutCharacter1["dice"]-1][1];
+					text=aboutCharacter1["dice"];
+				}else if(selectChar==2){
+					aboutCharacter2["x"]=aboutGame["area"][aboutCharacter2["dice"]-1][0];
+					aboutCharacter2["y"]=aboutGame["area"][aboutCharacter2["dice"]-1][1];
+					text=aboutCharacter2["dice"];
+				}else if(selectChar==3){
+					aboutCharacter3["x"]=aboutGame["area"][aboutCharacter3["dice"]-1][0];
+					aboutCharacter3["y"]=aboutGame["area"][aboutCharacter3["dice"]-1][1];
+					text=aboutCharacter3["dice"];
+				}
+				ref.child("c"+selectChar).set([text]);
+				ref.child("turn").set((aboutGame["turn"]<3?aboutGame["turn"]+1:1));
+				animationmove();
+				load_Firebase();
+				IsWinner();
+			}
+			
+		}
+		//-------------------เริ่มเกมใหม่-------------------------//
+		function newGame(){
+			ref=firebase.database().ref("gamesnake");
+			winner=false
+			document.getElementById("newGame").style.display="none"
+			ref.child("winner").set("");
+			ref.child("c1").set([1]);
+			ref.child("c2").set([1]);
+			ref.child("c3").set([1]);
+			ref.child("turn").set(1);
+			swal.fire("แจ้งเตือน","คุณได้กดเริ่มเกมใหม่เรียบร้อย","success");
+		}
+		//-------------------ตรวจสอบการชนะ-------------------------//
+		function IsWinner(number){
+			if(aboutCharacter1["dice"]==49 || aboutCharacter2["dice"]==49 || aboutCharacter3["dice"]==49){
+				document.getElementById("newGame").style.display="block"
+				ref.child("winner").set(selectChar);
+				swal.fire("แจ้งเตือน","คุณชนะ","success");
+				loadmap("main.png","character1.png","character2.png","character3.png");
+			}
+		}
+		//-------------------การทอยลูกเต๋า-------------------------//
+		function setDice(number){
+			dice.style.backgroundImage="url(\"./ลูกเต๋า/"+number+"\")";
+			let memory=parseInt(number.replace(".png",""));
+			if(!isNaN(memory)){
+			aboutGame["dice"]=parseInt(number.replace(".png",""));
+			move();
+			
+			}
+		}
+		//--------------------------------------------------//
+		async function animationmove(){
+			loadmap("main.png","character1.png","character2.png","character3.png");
+		}
+		//--------------------------------------------------//
+		
+
+		async function click(){
+			await setDice("animation.gif");
+			await loadmap("main.png","character1.png","character2.png","character3.png");
+			await setTimeout(function(){setDice((Math.floor(Math.random()*6)+1)+".png");},1000);
+		}
+
+		dice.addEventListener('click',function(){
+			selectChar=document.getElementById("selectcharacter").value;
+			if(parseInt(selectChar)==aboutGame["turn"] && !winner){
+				click();
+				console.log("click");
+			}
+		},false);
+		//--------------------------------------------------//
+		load_Firebase();
+		animationmove();
+	</script>
+</body>
+</html>
