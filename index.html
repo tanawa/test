@@ -548,7 +548,9 @@
 		}
 		//-------------------การทอยลูกเต๋า-------------------------//
 		function setDice(number){
-			dice.style.backgroundImage="url(\"./ลูกเต๋า/"+number+"\")";
+			//https://raw.githubusercontent.com/tanawa/test/gh-pages/2.png
+			//dice.style.backgroundImage="url(\"./ลูกเต๋า/"+number+"\")";
+			dice.style.backgroundImage="url(\"https://raw.githubusercontent.com/tanawa/test/gh-pages/"+number+".png\")";
 			let memory=parseInt(number.replace(".png",""));
 			if(!isNaN(memory)){
 			aboutGame["dice"]=parseInt(number.replace(".png",""));
